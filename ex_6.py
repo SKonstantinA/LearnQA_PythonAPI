@@ -2,8 +2,8 @@ import requests
 
 response = requests.post("https://playground.learnqa.ru/api/long_redirect")
 
-last_response = response.history[-1]
+final_url = response.url
 redirect_count = len(response.history)
 
-print(redirect_count)
-print(last_response.url)
+print(f"Кол-во редиректов - {redirect_count}")
+print(f"Последний URL - {final_url}")
