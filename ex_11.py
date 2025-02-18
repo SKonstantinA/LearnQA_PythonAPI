@@ -16,5 +16,5 @@ class TestCookie:
             expected_cookie_name = cookie.name
             expected_value = cookie.value
 
-        assert expected_cookie_name in cookies, f"Cookie '{expected_cookie_name}' is not found"
-        assert cookies[expected_cookie_name] == expected_value, f"Cookie '{expected_cookie_name}' has wrong value"
+            assert expected_cookie_name in cookies, f"Cookie '{expected_cookie_name}' is not found"
+            assert cookies[expected_cookie_name] == expected_value, f"Cookie '{expected_cookie_name}' has wrong value"
