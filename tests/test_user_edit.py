@@ -93,7 +93,6 @@ class TestUserEdit(BaseCase):
              f"Unexpected response content '{response2.content}'"
 
      def test_edit_another_user_auth_as_newly_created_user(self):
-         print(f"User 1 ID: {self.user_id}")
          time.sleep(1)
 
          # REGISTER USER 2
@@ -105,10 +104,6 @@ class TestUserEdit(BaseCase):
 
          email2 = register_data['email']
          password2 = register_data['password']
-         user_id2 = self.get_json_value(response2, "id")
-
-         assert self.user_id != user_id2, " User 1 has the same ID as User 2"
-         print(f"User 2 ID: {user_id2}")
 
          # LOGIN AS USER 2
          login_data = {
@@ -129,36 +124,10 @@ class TestUserEdit(BaseCase):
              cookies={"auth_sid": auth_sid2},
              data={"firstName": new_name}
          )
-         print(f"response4: {response4.json()}")
 
-         if response4.status_code == 200:
-         # LOGIN AS USER 1
-             login_data = {
-                 'email': self.email,
-                 'password': self.password
-             }
-             response5 = MyRequests.post("/user/login", data=login_data)
-
-             auth_sid1 = self.get_cookie(response5, "auth_sid")
-             token1 = self.get_header(response5, "x-csrf-token")
-
-             # GET
-             response6 = MyRequests.get(
-                 f"/user/{self.user_id}",
-                 headers={"x-csrf-token": token1},
-                 cookies={"auth_sid": auth_sid1}
-             )
-
-             print(f"response6: {response6.json()}")
-
-             Assertions.assert_json_value_by_name(
-                 response6,
-                 "firstName",
-                 self.first_name,
-                 "Changes was applied to User 1 when authorised as User 2"
-             )
-         else:
-             print("Something else")
+         Assertions.assert_status_code(response4, 400)
+         assert response4.json() == {'error': 'This user can only edit their own data.'}, \
+             f"Unexpected response content '{response2.content}'"
 
      def test_substitute_user_email_with_wrong_one(self):
          # LOGIN

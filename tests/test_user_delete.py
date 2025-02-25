@@ -100,15 +100,6 @@ class TestUserDelete(BaseCase):
             cookies={"auth_sid": auth_sid}
         )
 
-        if response2.status_code == 200:
-            response3= MyRequests.get(
-                f"/user/{user_id}",
-                headers={"x-csrf-token": token},
-                cookies={"auth_sid": auth_sid}
-            )
-
-            # Check if User 1 still exists
-            Assertions.assert_json_has_key(response3, 'username')
-        else:
-            Assertions.assert_status_code(response2, 400)
-            assert response2.json() != {'success': '!'}, f"Unexpected response content '{response2.content}'"
+        Assertions.assert_status_code(response2, 400)
+        assert response2.json() == {'error': 'This user can only delete their own account.'}, \
+            f"Unexpected response content '{response2.content}'"
